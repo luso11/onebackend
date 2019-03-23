@@ -1,0 +1,2 @@
+1|caso1|1|alias caso 1|150|prueba.txt|fasdfadfasd|2019-03-23 00:00:00|2019-03-23 00:00:00|txt|1
+2|caso1|2|alias caso 1|150|prueba.txt|fasdfadfasd|2019-03-23 00:00:00|2019-03-23 00:00:00|txt|1
