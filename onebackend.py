@@ -3,7 +3,7 @@ import os
 import shutil
 import logging
 import csv
-#import mysql.connector
+import mysql.connector
 import hashlib
 import time
 import datetime
