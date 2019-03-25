@@ -69,7 +69,9 @@ def status():
 		csvReader = csv.reader(csvfile, delimiter='|',quotechar='"',quoting=csv.QUOTE_MINIMAL)
 		for row in csvReader:
 			if str(row[4]) in src_files:
-				print row
+				print "Processed: " + str(row[4])
+			else:
+				print "Missing: " + str(row[4])
 
 def main():
         logging.basicConfig(filename='logging.log',level=logging.DEBUG)
