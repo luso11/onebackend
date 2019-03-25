@@ -1,0 +1,8 @@
+If we want to filter files created on 2019-03-21
+	cat basededatos.txt | awk -F "|" '{if ($7~"2019-03-21") {print $7,$1,$5}}' | sort
+
+If we want to filter files for caso1
+	cat basededatos.txt | awk -F "|" '{if ($1~"caso1") {print $1,$5}}' | sort
+
+If we want to filter txt files
+	cat basededatos.txt | awk -F "|" '{if ($9~"txt") {print $1,$5}}' | sort

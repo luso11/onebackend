@@ -3,12 +3,13 @@ import os
 import shutil
 import logging
 import csv
-import mysql.connector
+#import mysql.connector
 import hashlib
 import time
 import datetime
 
-srcFolder = "/home/luis/onebackend/incoming/"
+srcFolder = "/root/prueba/incoming/"
+databaseFile = "basededatos.txt"
 
 def md5sum(filename, blocksize=65536):
 	hash = hashlib.md5()
@@ -61,13 +62,22 @@ def copyData(destFolder):
 		if (os.path.isfile(full_file_name)):
 			shutil.copy(full_file_name, destFolder)
 
+def status():
+	src_files=os.listdir(srcFolder)
+	ingestedFiles=[]
+	with open(databaseFile, 'rb') as csvfile:
+		csvReader = csv.reader(csvfile, delimiter='|',quotechar='"',quoting=csv.QUOTE_MINIMAL)
+		for row in csvReader:
+			if str(row[4]) in src_files:
+				print row
+
 def main():
         logging.basicConfig(filename='logging.log',level=logging.DEBUG)
         logging.debug('Execution begin')
 	if len(sys.argv)>1:
 		if sys.argv[1]=="list":
 			logging.debug("Listing incoming folder")
-			for file in listFolder()
+			for file in listFolder():
 				print file
 			logging.debug("Listing incoming folder finished")
 		elif sys.argv[1]=="copy":
@@ -78,6 +88,10 @@ def main():
 		        logging.debug("Loading info from file: "+sys.argv[2])
 			loadInfo(sys.argv[2])
 		        logging.debug("Loading info finished")
+		elif sys.argv[1]=="status":
+                        logging.debug("Status requested")
+			status()
+                        logging.debug("Status finished")
 		elif sys.argv[1]=="dump":
 			logging.debug("Databse dump requested")
 			cursor=databaseDataCollect()
