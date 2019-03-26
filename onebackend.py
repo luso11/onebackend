@@ -8,7 +8,7 @@ import hashlib
 import time
 import datetime
 
-srcFolder = "/root/prueba/incoming/"
+srcFolder = "/home/luis/onebackend/incoming/"
 databaseFile = "basededatos.txt"
 
 def md5sum(filename, blocksize=65536):
@@ -19,10 +19,13 @@ def md5sum(filename, blocksize=65536):
 	return hash.hexdigest()
 
 def insertRowinFile(row,fileName):
-	with open(fileName, 'ab') as csvfile:
-		csvWriter = csv.writer(csvfile, delimiter='|',quotechar='"',quoting=csv.QUOTE_MINIMAL)
-                csvWriter.writerow([unicode(col) for col in row])
-		logging.debug("Row inserted in file "+str(fileName)+" "+str(row))
+	try:
+		with open(fileName, 'ab') as csvfile:
+			csvWriter = csv.writer(csvfile, delimiter='|',quotechar='"',quoting=csv.QUOTE_MINIMAL)
+                	csvWriter.writerow([unicode(col) for col in row])
+			logging.debug("Row inserted in file "+str(fileName)+" "+str(row))
+	except:
+		logging.debug("Coudln't open "+fileName)
 
 def databaseDataCollect():
 	conn = mysql.connector.connect(host='localhost', port=3306,user='onebackend', password='password',database='onebackenddb')
@@ -56,71 +59,93 @@ def loadInfo(filePath):
 			insertRowinFile(row,"/home/luis/onebackend/basededatos.txt")
 
 def copyData(destFolder):
-	src_files = os.listdir(srcFolder)
-	for file_name in src_files:
-		full_file_name = os.path.join(srcFolder, file_name)
-		if (os.path.isfile(full_file_name)):
-			shutil.copy(full_file_name, destFolder)
+	try:
+		dest_files = os.listdir(destFolder)
+		src_files = os.listdir(srcFolder)
+		for file_name in src_files:
+			if file_name not in dest_files:
+				full_file_name = os.path.join(srcFolder, file_name)
+				if (os.path.isfile(full_file_name)):
+					shutil.copy(full_file_name, destFolder)
+	except:
+		print "Cannot copy to "+destFolder
 
 def status():
 	src_files=os.listdir(srcFolder)
 	ingestedFiles=[]
-	with open(databaseFile, 'rb') as csvfile:
-		csvReader = csv.reader(csvfile, delimiter='|',quotechar='"',quoting=csv.QUOTE_MINIMAL)
-		for row in csvReader:
-			if str(row[4]) in src_files:
-				print "Processed: " + str(row[4])
-			else:
-				print "Missing: " + str(row[4])
+	try:
+		with open(databaseFile, 'rb') as csvfile:
+			csvReader = csv.reader(csvfile, delimiter='|',quotechar='"',quoting=csv.QUOTE_MINIMAL)
+			for row in csvReader:
+				ingestedFiles.append(row[4])
+	except:
+		logging.debug('Cannot open file. Ussing empty value for ingestedFiles')
+	print ingestedFiles
+	print "ingestados"
+	for file in src_files:
+		if file in ingestedFiles:
+			print "Processed: " + str(file)
+		else:
+			print "Missing: " + str(file)
 
 def main():
         logging.basicConfig(filename='logging.log',level=logging.DEBUG)
         logging.debug('Execution begin')
-	if len(sys.argv)>1:
-		if sys.argv[1]=="list":
-			logging.debug("Listing incoming folder")
-			for file in listFolder():
-				print file
-			logging.debug("Listing incoming folder finished")
-		elif sys.argv[1]=="copy":
-			logging.debug("Copying info to: "+sys.argv[2])
-			copyData(sys.argv[2])
-			logging.debug("Copying info finished")
-		elif sys.argv[1]=="load":
-		        logging.debug("Loading info from file: "+sys.argv[2])
-			loadInfo(sys.argv[2])
-		        logging.debug("Loading info finished")
-		elif sys.argv[1]=="status":
-                        logging.debug("Status requested")
-			status()
-                        logging.debug("Status finished")
-		elif sys.argv[1]=="dump":
-			logging.debug("Databse dump requested")
-			cursor=databaseDataCollect()
-			try:
-			#attempt to read from the file
-				file = open(sys.argv[2], 'r')
-				file.close()
-			except IOError:
-			#If it does not exist we create the file
-				file = open(sys.argv[2], 'w')
-				file.close()
-			for row in cursor:
-				insertRowinFile(row,sys.argv[2])
-		        logging.debug("Database dump finished")
-		elif sys.argv[1]=="mmls":
-		        logging.debug("MMLS command requested")
-			command=""
-			for word in sys.argv[1:]:
-				command+=command+" "+word
-			os.system(command)
-			logging.debug("MMLS command finished")
-	else:
+	try:
+		if len(sys.argv)>1:
+			if sys.argv[1]=="list":
+				logging.debug("Listing incoming folder")
+				for file in listFolder():
+					print file
+				logging.debug("Listing incoming folder finished")
+			elif sys.argv[1]=="copy":
+				logging.debug("Copying info to: "+sys.argv[2])
+				copyData(sys.argv[2])
+				logging.debug("Copying info finished")
+			elif sys.argv[1]=="load":
+			        logging.debug("Loading info from file: "+sys.argv[2])
+				loadInfo(sys.argv[2])
+			        logging.debug("Loading info finished")
+			elif sys.argv[1]=="status":
+                	        logging.debug("Status requested")
+				status()
+	                        logging.debug("Status finished")
+			elif sys.argv[1]=="dump":
+				logging.debug("Databse dump requested")
+				cursor=databaseDataCollect()
+				try:
+				#attempt to read from the file
+					file = open(sys.argv[2], 'r')
+					file.close()
+				except IOError:
+				#If it does not exist we create the file
+					file = open(sys.argv[2], 'w')
+					file.close()
+				for row in cursor:
+					insertRowinFile(row,sys.argv[2])
+			        logging.debug("Database dump finished")
+			elif sys.argv[1]=="mmls":
+			        logging.debug("MMLS command requested")
+				command=""
+				for word in sys.argv[1:]:
+					command+=command+" "+word
+				os.system(command)
+				logging.debug("MMLS command finished")
+		else:
+			print("Options not found. Please use one of the following")
+			print("> list --> list incoming folder")
+			print("> status --> importing status")
+			print("> load filename --> load new evidences")
+			print("> copy destFolder --> Copy everything from incoming folder to destFolder")
+			print("> mmls [-t mmtype ] [-o offset ] [ -i imgtype ] [-b dev_sector_size] [-BrvV] [-aAmM] image [images] --> Execute mmls command")
+			print("> dump filename --> export databse to specified file")
+	except:
 		print("Options not found. Please use one of the following")
 		print("> list --> list incoming folder")
-		print("> load filename --> load new evidences")
+		print("> status --> importing status")
+ 		print("> load filename --> load new evidences")
 		print("> copy destFolder --> Copy everything from incoming folder to destFolder")
-		print("> mmls [-t mmtype ] [-o offset ] [ -i imgtype ] [-b dev_sector_size] [-BrvV] [-aAmM] image [images] --> Execute mmls command")
+                print("> mmls [-t mmtype ] [-o offset ] [ -i imgtype ] [-b dev_sector_size] [-BrvV] [-aAmM] image [images] --> Execute mmls command")
 		print("> dump filename --> export databse to specified file")
 
 if __name__== "__main__":

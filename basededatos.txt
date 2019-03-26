@@ -1,2 +1,6 @@
-1|caso1|1|alias caso 1|150|prueba.txt|fasdfadfasd|2019-03-23 00:00:00|2019-03-23 00:00:00|txt|1
-2|caso1|2|alias caso 1|150|prueba.txt|fasdfadfasd|2019-03-23 00:00:00|2019-03-23 00:00:00|txt|1
+caso2|4|evidencia clave|2147463521|cfreds_2015_data_leakage_pc.E01|adfbadfklaj18612|2019-03-23 12:45:47|2019-03-24 14:59:20|E01
+caso2|5|evidencia clave disco|255051328|cfreds_2015_data_leakage_rm#2.E01|adfbadfklaj18612|2019-03-23 12:20:34|2019-03-24 14:59:23|E01
+caso3|6|evidencia clave|2147469124|cfreds_2015_data_leakage_pc.E03|7a21bf1b6db3ce433c55ac76749f12d9|2019-03-23 12:47:07|2019-03-26 20:09:11|E03
+caso3|7|evidencia clave disco|255051328|cfreds_2015_data_leakage_rm#2.E01|6cfbfdb14e0a504684a338b87362d753|2019-03-23 12:20:34|2019-03-26 20:09:14|E01
+caso4|8|evidencia clave|1382823825|cfreds_2015_data_leakage_pc.E04|62f6cce2ec9e1b1f7a21cef0d12e0e38|2019-03-23 12:33:34|2019-03-26 20:14:37|E04
+caso4|9|evidencia clave|1382823825|cfreds_2015_data_leakage_pc.E04|62f6cce2ec9e1b1f7a21cef0d12e0e38|2019-03-23 12:33:34|2019-03-26 20:14:50|E04
