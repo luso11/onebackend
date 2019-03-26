@@ -14,12 +14,11 @@ databaseFile = "basededatos.txt"
 def setup_custom_logger(name):
     formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s',
                                   datefmt='%Y-%m-%d %H:%M:%S')
-    handler = logging.FileHandler('logging.log', mode='w')
+    handler = logging.FileHandler('logging.log', mode='a')
     handler.setFormatter(formatter)
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(handler)
-    logger.addHandler(screen_handler)
     return logger
 
 
@@ -37,7 +36,7 @@ def insertRowinFile(row,fileName):
                 	csvWriter.writerow([unicode(col) for col in row])
 			logger.debug("Row inserted in file "+str(fileName)+" "+str(row))
 	except:
-		logger.error("Coudln't open "+fileName)
+		logger.debug("Coudln't open "+fileName)
 
 def databaseDataCollect():
 	conn = mysql.connector.connect(host='localhost', port=3306,user='onebackend', password='password',database='onebackenddb')
@@ -81,7 +80,7 @@ def copyData(destFolder):
 					shutil.copy(full_file_name, destFolder)
 	except:
 		print "Cannot copy to "+destFolder
-		logger.error("Cannot copy to "+destFolder)
+		logger.debug("Cannot copy to "+destFolder)
 
 def status():
 	src_files=os.listdir(srcFolder)
@@ -92,7 +91,7 @@ def status():
 			for row in csvReader:
 				ingestedFiles.append(row[4])
 	except:
-		logger.error('Cannot open file. Ussing empty value for ingestedFiles')
+		logger.debug('Cannot open file. Ussing empty value for ingestedFiles')
 	for file in src_files:
 		if file in ingestedFiles:
 			print "Processed: " + str(file)
@@ -150,13 +149,7 @@ def main():
 			print("> mmls [-t mmtype ] [-o offset ] [ -i imgtype ] [-b dev_sector_size] [-BrvV] [-aAmM] image [images] --> Execute mmls command")
 			print("> dump filename --> export databse to specified file")
 	except:
-		print("Options not found. Please use one of the following")
-		print("> list --> list incoming folder")
-		print("> status --> importing status")
- 		print("> load filename --> load new evidences")
-		print("> copy destFolder --> Copy everything from incoming folder to destFolder")
-                print("> mmls [-t mmtype ] [-o offset ] [ -i imgtype ] [-b dev_sector_size] [-BrvV] [-aAmM] image [images] --> Execute mmls command")
-		print("> dump filename --> export databse to specified file")
+		logger.debug("Couldn't initiate application")
 
 if __name__== "__main__":
 	main()

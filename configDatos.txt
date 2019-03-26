@@ -1,2 +1,2 @@
-caso2,evidencia clave,cfreds_2015_data_leakage_pc.E01
-caso2,evidencia clave disco,cfreds_2015_data_leakage_rm#2.E01
+caso4,evidencia clave,cfreds_2015_data_leakage_pc.E04
+caso4,evidencia clave,cfreds_2015_data_leakage_pc.E04

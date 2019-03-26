@@ -1,27 +1,11 @@
-DEBUG:root:Cannot open text file
-DEBUG:root:Cannot open text file
-DEBUG:root:Cannot open text file
-DEBUG:root:Cannot open text file
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Cannot open text file1
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Cannot open text file1
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Cannot open text file1
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Cannot open text file1
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Cannot open text file1
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Cannot open text file1
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
-DEBUG:root:Iniciamos ejecucion
+2019-03-26 20:35:42 DEBUG    Listing incoming folder
+2019-03-26 20:35:42 DEBUG    Listing incoming folder finished
+2019-03-26 20:36:04 DEBUG    Status requested
+2019-03-26 20:36:04 DEBUG    Status finished
+2019-03-26 20:36:07 DEBUG    Listing incoming folder
+2019-03-26 20:36:07 DEBUG    Listing incoming folder finished
+2019-03-26 20:36:09 DEBUG    Status requested
+2019-03-26 20:36:09 DEBUG    Status finished
+2019-03-26 20:36:21 DEBUG    Copying info to: kk
+2019-03-26 20:39:57 DEBUG    Copying info to: kks
+2019-03-26 20:39:57 DEBUG    Couldn't initiate application
