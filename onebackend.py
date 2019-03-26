@@ -11,6 +11,18 @@ import datetime
 srcFolder = "/home/luis/onebackend/incoming/"
 databaseFile = "basededatos.txt"
 
+def setup_custom_logger(name):
+    formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s',
+                                  datefmt='%Y-%m-%d %H:%M:%S')
+    handler = logging.FileHandler('logging.log', mode='w')
+    handler.setFormatter(formatter)
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(handler)
+    logger.addHandler(screen_handler)
+    return logger
+
+
 def md5sum(filename, blocksize=65536):
 	hash = hashlib.md5()
 	with open(filename, "rb") as f:
@@ -23,9 +35,9 @@ def insertRowinFile(row,fileName):
 		with open(fileName, 'ab') as csvfile:
 			csvWriter = csv.writer(csvfile, delimiter='|',quotechar='"',quoting=csv.QUOTE_MINIMAL)
                 	csvWriter.writerow([unicode(col) for col in row])
-			logging.debug("Row inserted in file "+str(fileName)+" "+str(row))
+			logger.debug("Row inserted in file "+str(fileName)+" "+str(row))
 	except:
-		logging.debug("Coudln't open "+fileName)
+		logger.error("Coudln't open "+fileName)
 
 def databaseDataCollect():
 	conn = mysql.connector.connect(host='localhost', port=3306,user='onebackend', password='password',database='onebackenddb')
@@ -69,6 +81,7 @@ def copyData(destFolder):
 					shutil.copy(full_file_name, destFolder)
 	except:
 		print "Cannot copy to "+destFolder
+		logger.error("Cannot copy to "+destFolder)
 
 def status():
 	src_files=os.listdir(srcFolder)
@@ -79,9 +92,7 @@ def status():
 			for row in csvReader:
 				ingestedFiles.append(row[4])
 	except:
-		logging.debug('Cannot open file. Ussing empty value for ingestedFiles')
-	print ingestedFiles
-	print "ingestados"
+		logger.error('Cannot open file. Ussing empty value for ingestedFiles')
 	for file in src_files:
 		if file in ingestedFiles:
 			print "Processed: " + str(file)
@@ -89,29 +100,28 @@ def status():
 			print "Missing: " + str(file)
 
 def main():
-        logging.basicConfig(filename='logging.log',level=logging.DEBUG)
-        logging.debug('Execution begin')
+        logger = setup_custom_logger('onebackend')
 	try:
 		if len(sys.argv)>1:
 			if sys.argv[1]=="list":
-				logging.debug("Listing incoming folder")
+				logger.debug("Listing incoming folder")
 				for file in listFolder():
 					print file
-				logging.debug("Listing incoming folder finished")
+				logger.debug("Listing incoming folder finished")
 			elif sys.argv[1]=="copy":
-				logging.debug("Copying info to: "+sys.argv[2])
+				logger.debug("Copying info to: "+sys.argv[2])
 				copyData(sys.argv[2])
-				logging.debug("Copying info finished")
+				logger.debug("Copying info finished")
 			elif sys.argv[1]=="load":
-			        logging.debug("Loading info from file: "+sys.argv[2])
+			        logger.debug("Loading info from file: "+sys.argv[2])
 				loadInfo(sys.argv[2])
-			        logging.debug("Loading info finished")
+			        logger.debug("Loading info finished")
 			elif sys.argv[1]=="status":
-                	        logging.debug("Status requested")
+                	        logger.debug("Status requested")
 				status()
-	                        logging.debug("Status finished")
+	                        logger.debug("Status finished")
 			elif sys.argv[1]=="dump":
-				logging.debug("Databse dump requested")
+				logger.debug("Databse dump requested")
 				cursor=databaseDataCollect()
 				try:
 				#attempt to read from the file
@@ -123,14 +133,14 @@ def main():
 					file.close()
 				for row in cursor:
 					insertRowinFile(row,sys.argv[2])
-			        logging.debug("Database dump finished")
+			        logger.debug("Database dump finished")
 			elif sys.argv[1]=="mmls":
-			        logging.debug("MMLS command requested")
+			        logger.debug("MMLS command requested")
 				command=""
 				for word in sys.argv[1:]:
 					command+=command+" "+word
 				os.system(command)
-				logging.debug("MMLS command finished")
+				logger.debug("MMLS command finished")
 		else:
 			print("Options not found. Please use one of the following")
 			print("> list --> list incoming folder")
